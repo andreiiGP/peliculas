@@ -1,71 +1,106 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:peliculas/loguin.dart';
 class HomePageWidget extends StatelessWidget {
-  @override
+   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        backgroundColor: Color.fromARGB(213, 45, 122, 167),
+        backgroundColor: Colors.transparent, // Fondo transparente
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(30.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    'assets/principal.png',
-                    width: 312,
-                    height: 217,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+          top: true,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/pueba.png'), // Imagen de fondo
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: 20),
-              Text(
-                'Screen\nScape',
-                style: GoogleFonts.knewave(
-                  color: Colors.white,
-                  fontSize: 60,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'peliculas');
-                  },
-                  icon: Padding(
-                    padding: EdgeInsets.only(
-                        left: 10), // Agrega espacio a la izquierda del icono
-                    child: Icon(
-                      Icons.play_circle,
-                      color: Colors.white,
-                      size: 90,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Espacio para la imagen encima del botón
+                    SizedBox(
+                      width: 350, // Ancho de la imagen
+                      height: 300, // Alto de la imagen
+                      child: Image.asset(
+                        'assets/principal.png', // Ruta de la imagen
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  label: SizedBox.shrink(),
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xFFFF080B),
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                    SizedBox(height: 16), // Espacio entre la imagen y el botón
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const IniciosesionWidget(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(250, 60),
+                        backgroundColor: Color.fromARGB(156, 70, 135, 255),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Inicia sesión',
+                        style: TextStyle(
+                          fontFamily: 'Amaranth',
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 16), // Espacio entre el botón y otros elementos
+                    // Resto del contenido aquí...
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const IniciosesionWidget(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(250, 60),
+                        backgroundColor: Color.fromARGB(156, 70, 135, 255),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Registrate',
+                        style: TextStyle(
+                          fontFamily: 'Amaranth',
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16), // Espacio entre el botón y otros elementos
+                    // Resto del contenido aquí...
+                  ],
                 ),
               ),
-            ], // Cierra la lista de children
-          ), // Cierra el Column
-        ), // Cierra el SafeArea
-      ), // Cierra el Scaffold
-    ); // Cierra el GestureDetector
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
+
 
 void main() {
   WidgetsApp.debugAllowBannerOverride = false;
@@ -81,10 +116,17 @@ class MyApp extends StatelessWidget {
       title: 'Screen Scape',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 94, 1, 255)),
+          seedColor: const Color.fromARGB(255, 94, 1, 255),
+        ),
         useMaterial3: true,
       ),
       home: HomePageWidget(),
-    );
+       routes: {
+          '/loguin': (context) => const IniciosesionWidget(),
+/*           '/menudia': (context) => const Mesa1Widget(),
+          '/pantallamesas': (context) => PantallaMesasWidget(),
+          '/perfilmesero': (context) => const PerfilmeseroWidget(),
+          '/registro': (context) => const RegistroWidget(), */
+        });
   }
 }
