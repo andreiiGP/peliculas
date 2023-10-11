@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:peliculas/catpeliculas.dart';
 
 class Screen extends StatelessWidget {
   const Screen({super.key});
@@ -40,7 +41,10 @@ class Screen extends StatelessWidget {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, 'peliculas');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => peli()));
                   },
                   icon: Padding(
                     padding: EdgeInsets.only(
@@ -69,24 +73,3 @@ class Screen extends StatelessWidget {
   }
 }
 
-void main() {
-  WidgetsApp.debugAllowBannerOverride = false;
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Screen Scape',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 94, 1, 255)),
-        useMaterial3: true,
-      ),
-      home: Screen(),
-    );
-  }
-}
