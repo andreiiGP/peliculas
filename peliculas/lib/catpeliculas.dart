@@ -1,53 +1,44 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class Movie {
   final String imageUrl;
-  final String title;
+  final String videoUrl;
 
-  Movie({required this.imageUrl, required this.title});
+  Movie({required this.imageUrl, required this.videoUrl});
 }
 
-  class peli extends StatefulWidget {
-    const peli({super.key});
-
+class Peli extends StatefulWidget {
+  const Peli({Key? key}) : super(key: key);
 
   @override
-  _ImageSliderState createState() => _ImageSliderState();
+  _PeliState createState() => _PeliState();
 }
 
-class _ImageSliderState extends State<peli> {
-  final List<Movie> movies = [
+class _PeliState extends State<Peli> {
+  final List<Movie> sliderImages = [
     Movie(
       imageUrl: 'assets/spidermanSlider.jpeg',
-      title: 'Spiderman',
+      videoUrl: '',
     ),
     Movie(
       imageUrl: 'assets/soulSlider.jpg',
-      title: 'Soul',
+      videoUrl: '',
+    ),
+    // Agrega más imágenes y enlaces de video para el slider según sea necesario
+  ];
+
+  final List<Movie> catalogMovies = [
+    Movie(
+      imageUrl: 'assets/spiderman.jpg',
+      videoUrl: 'https://www.youtube.com/watch?v=VEDhoip4KDU',
     ),
     Movie(
-      imageUrl: 'assets/guardianesSlider.jpg',
-      title: 'Guardianes',
+      imageUrl: 'assets/soul.jpg',
+      videoUrl: 'https://www.youtube.com/watch?v=VIDEO_ID_4',
     ),
-    Movie(
-      imageUrl: 'assets/deadpoolSlider.jpg',
-      title: 'Deadpool',
-    ),
-    Movie(
-      imageUrl: 'assets/timeistheenemi.jpeg',
-      title: 'Time is the Enemy',
-    ),
-    // Agrega más películas aquí
-    Movie(
-      imageUrl: 'assets/nuevapelicula1.jpeg',
-      title: 'Nueva Película 1',
-    ),
-    Movie(
-      imageUrl: 'assets/nuevapelicula2.jpeg',
-      title: 'Nueva Película 2',
-    ),
-    // Agrega más películas según sea necesario
+    // Agrega más películas con sus enlaces de video
   ];
 
   int _currentIndex = 0;
@@ -60,9 +51,8 @@ class _ImageSliderState extends State<peli> {
 
     _pageController = PageController(initialPage: _currentIndex);
 
-    // Configura un temporizador para desplazar automáticamente las imágenes
-    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      if (_currentIndex < movies.length - 1) {
+    _timer = Timer.periodic(const Duration(seconds: 6), (Timer timer) {
+      if (_currentIndex < sliderImages.length - 1) {
         _currentIndex++;
       } else {
         _currentIndex = 0;
@@ -86,64 +76,46 @@ class _ImageSliderState extends State<peli> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Catálogo de Películas'),
+        title: const Text('Películas'),
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 300, // Altura del slider
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                return Image.asset(
-                  movies[index].imageUrl,
-                  fit: BoxFit.cover,
-                );
-              },
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _buildPageIndicator(),
-          ),
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+      body: Container(
+        color: Colors.black,
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 200,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: sliderImages.length,
+                itemBuilder: (context, index) {
+                  return Image.asset(
+                    sliderImages[index].imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                },
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
               ),
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                return MovieTile(movie: movies[index]);
-              },
             ),
-          ),
-        ],
+            const Divider(),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemCount: catalogMovies.length,
+                itemBuilder: (context, index) {
+                  return MovieTile(movie: catalogMovies[index]);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  List<Widget> _buildPageIndicator() {
-    List<Widget> indicators = [];
-    for (int i = 0; i < movies.length; i++) {
-      indicators.add(
-        Container(
-          width: 8.0,
-          height: 8.0,
-          margin: const EdgeInsets.symmetric(horizontal: 4.0),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: _currentIndex == i ? Colors.blue : Colors.grey,
-          ),
-        ),
-      );
-    }
-    return indicators;
   }
 }
 
@@ -154,37 +126,77 @@ class MovieTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 200, // Ajusta la altura de la tarjeta según tu preferencia
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    movie.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      movie.title,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  // Agrega más contenido si es necesario
-                ],
-              ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => MovieScreen(movie: movie),
+        ));
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Image.asset(
+              movie.imageUrl,
+              height: 130,
+              width: double.infinity,
+              fit: BoxFit.cover,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+}
+
+class MovieScreen extends StatefulWidget {
+  final Movie movie;
+
+  MovieScreen({required this.movie});
+
+  @override
+  _MovieScreenState createState() => _MovieScreenState(movie: movie);
+}
+
+class _MovieScreenState extends State<MovieScreen> {
+  final Movie movie;
+
+  _MovieScreenState({required this.movie});
+
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(movie.videoUrl)!,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Reproducir Video'),
+      ),
+      body: Center(
+        child: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

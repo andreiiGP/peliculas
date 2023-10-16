@@ -31,6 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^5.1.0
+  video_player: ^2.2.14
+  url_launcher: ^6.0.3 
+  youtube_player_flutter: ^8.1.2
+  webview_flutter: ^4.4.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -70,6 +74,7 @@ flutter:
      - assets/soulSlider.jpg
      - assets/deadpoolSlider.jpg
      - assets/timeistheenemi.jpeg
+     - assets/Spider-Manvid.mp4
     
     
     

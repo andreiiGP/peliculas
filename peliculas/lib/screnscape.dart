@@ -44,9 +44,9 @@ class Screen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => peli()));
+                            builder: (context) => const Peli()));
                   },
-                  icon: Padding(
+                  icon: const Padding(
                     padding: EdgeInsets.only(
                         left: 10), // Agrega espacio a la izquierda del icono
                     child: Icon(
@@ -55,7 +55,7 @@ class Screen extends StatelessWidget {
                       size: 90,
                     ),
                   ),
-                  label: SizedBox.shrink(),
+                  label: const SizedBox.shrink(),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFFFF080B),
                     elevation: 3,
