@@ -1,30 +1,53 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-void main() => runApp(MyApp());
+class Movie {
+  final String imageUrl;
+  final String title;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: peli(),
-    );
-  }
+  Movie({required this.imageUrl, required this.title});
 }
 
-class peli extends StatefulWidget {
+  class peli extends StatefulWidget {
+    const peli({super.key});
+
+
   @override
   _ImageSliderState createState() => _ImageSliderState();
 }
 
 class _ImageSliderState extends State<peli> {
-  final List<String> imageList = [
-    'assets/spidermanSlider.jpeg',
-    'assets/soulSlider.jpg',
-    'assets/guardianesSlider.jpg',
-    'assets/deadpoolSlider.jpg',
-    'assets/timeistheenemi.jpeg',
-    // Agrega más rutas de imágenes según sea necesario
+  final List<Movie> movies = [
+    Movie(
+      imageUrl: 'assets/spidermanSlider.jpeg',
+      title: 'Spiderman',
+    ),
+    Movie(
+      imageUrl: 'assets/soulSlider.jpg',
+      title: 'Soul',
+    ),
+    Movie(
+      imageUrl: 'assets/guardianesSlider.jpg',
+      title: 'Guardianes',
+    ),
+    Movie(
+      imageUrl: 'assets/deadpoolSlider.jpg',
+      title: 'Deadpool',
+    ),
+    Movie(
+      imageUrl: 'assets/timeistheenemi.jpeg',
+      title: 'Time is the Enemy',
+    ),
+    // Agrega más películas aquí
+    Movie(
+      imageUrl: 'assets/nuevapelicula1.jpeg',
+      title: 'Nueva Película 1',
+    ),
+    Movie(
+      imageUrl: 'assets/nuevapelicula2.jpeg',
+      title: 'Nueva Película 2',
+    ),
+    // Agrega más películas según sea necesario
   ];
 
   int _currentIndex = 0;
@@ -38,15 +61,15 @@ class _ImageSliderState extends State<peli> {
     _pageController = PageController(initialPage: _currentIndex);
 
     // Configura un temporizador para desplazar automáticamente las imágenes
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentIndex < imageList.length - 1) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_currentIndex < movies.length - 1) {
         _currentIndex++;
       } else {
         _currentIndex = 0;
       }
       _pageController.animateToPage(
         _currentIndex,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeOut,
       );
     });
@@ -63,7 +86,7 @@ class _ImageSliderState extends State<peli> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Peliculas'),
+        title: const Text('Catálogo de Películas'),
       ),
       body: Column(
         children: <Widget>[
@@ -71,10 +94,10 @@ class _ImageSliderState extends State<peli> {
             height: 300, // Altura del slider
             child: PageView.builder(
               controller: _pageController,
-              itemCount: imageList.length,
+              itemCount: movies.length,
               itemBuilder: (context, index) {
                 return Image.asset(
-                  imageList[index],
+                  movies[index].imageUrl,
                   fit: BoxFit.cover,
                 );
               },
@@ -89,6 +112,17 @@ class _ImageSliderState extends State<peli> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: _buildPageIndicator(),
           ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemCount: movies.length,
+              itemBuilder: (context, index) {
+                return MovieTile(movie: movies[index]);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -96,12 +130,12 @@ class _ImageSliderState extends State<peli> {
 
   List<Widget> _buildPageIndicator() {
     List<Widget> indicators = [];
-    for (int i = 0; i < imageList.length; i++) {
+    for (int i = 0; i < movies.length; i++) {
       indicators.add(
         Container(
           width: 8.0,
           height: 8.0,
-          margin: EdgeInsets.symmetric(horizontal: 4.0),
+          margin: const EdgeInsets.symmetric(horizontal: 4.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: _currentIndex == i ? Colors.blue : Colors.grey,
@@ -110,5 +144,47 @@ class _ImageSliderState extends State<peli> {
       );
     }
     return indicators;
+  }
+}
+
+class MovieTile extends StatelessWidget {
+  final Movie movie;
+
+  MovieTile({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 200, // Ajusta la altura de la tarjeta según tu preferencia
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.asset(
+                    movie.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      movie.title,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // Agrega más contenido si es necesario
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
