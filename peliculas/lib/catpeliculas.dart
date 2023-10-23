@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Movie {
   final String imageUrl;
-  final String videoUrl;
+  final String videoUrl; // Agrega la propiedad para el enlace de reproducción
 
   Movie({required this.imageUrl, required this.videoUrl});
 }
@@ -26,17 +26,34 @@ class _PeliState extends State<Peli> {
       imageUrl: 'assets/soulSlider.jpg',
       videoUrl: '',
     ),
+    Movie(
+      imageUrl: 'assets/guardianesSlider.jpg',
+      videoUrl: '',
+    ),
+    Movie(
+      imageUrl: 'assets/deadpoolSlider.jpg',
+      videoUrl: '',
+    ),
+    Movie(
+      imageUrl: 'assets/timeistheenemi.jpeg',
+      videoUrl: '',
+    ),
     // Agrega más imágenes y enlaces de video para el slider según sea necesario
   ];
 
   final List<Movie> catalogMovies = [
     Movie(
       imageUrl: 'assets/spiderman.jpg',
-      videoUrl: 'https://www.youtube.com/watch?v=VEDhoip4KDU',
+      videoUrl:
+          'https://filemoon.sx/e/jj6ekcwmub9m/Spider-Man_Into_the_Spider-Verse.2018.5.1_BRRIP.mp4',
     ),
     Movie(
       imageUrl: 'assets/soul.jpg',
-      videoUrl: 'https://www.youtube.com/watch?v=VIDEO_ID_4',
+      videoUrl: 'URL_DEL_VIDEO_DE_SOUL',
+    ),
+    Movie(
+      imageUrl: 'assets/guardianes.jpg',
+      videoUrl: 'URL_DEL_VIDEO_DE_GUARDIANES',
     ),
     // Agrega más películas con sus enlaces de video
   ];
@@ -51,6 +68,7 @@ class _PeliState extends State<Peli> {
 
     _pageController = PageController(initialPage: _currentIndex);
 
+    // Configura un temporizador para desplazar automáticamente las imágenes del slider
     _timer = Timer.periodic(const Duration(seconds: 6), (Timer timer) {
       if (_currentIndex < sliderImages.length - 1) {
         _currentIndex++;
@@ -79,11 +97,11 @@ class _PeliState extends State<Peli> {
         title: const Text('Películas'),
       ),
       body: Container(
-        color: Colors.black,
+        color: Colors.black, // Establece el fondo negro
         child: Column(
           children: <Widget>[
             Container(
-              height: 200,
+              height: 200, // Altura del slider
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: sliderImages.length,
@@ -100,7 +118,7 @@ class _PeliState extends State<Peli> {
                 },
               ),
             ),
-            const Divider(),
+            const Divider(), // Agregar un separador visual
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -150,53 +168,24 @@ class MovieTile extends StatelessWidget {
   }
 }
 
-class MovieScreen extends StatefulWidget {
+class MovieScreen extends StatelessWidget {
   final Movie movie;
 
   MovieScreen({required this.movie});
 
   @override
-  _MovieScreenState createState() => _MovieScreenState(movie: movie);
-}
-
-class _MovieScreenState extends State<MovieScreen> {
-  final Movie movie;
-
-  _MovieScreenState({required this.movie});
-
-  late YoutubePlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(movie.videoUrl)!,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
-        mute: false,
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Reproducir Video'),
-      ),
       body: Center(
-        child: YoutubePlayer(
-          controller: _controller,
-          showVideoProgressIndicator: true,
+        child: ElevatedButton(
+          onPressed: () {
+            // Abre una página web para reproducir el video en línea
+            launch(movie
+                .videoUrl); // Asegúrate de importar el paquete 'url_launcher'
+          },
+          child: Text('Reproducir video'),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }
